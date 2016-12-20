@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+<head>
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- Compiled and minified JavaScript -->
+  <title>Panel admin</title>
+</head>
+<body>
+ <nav>
+  <div class="nav-wrapper">
+    <a href="#" class="brand-logo">MyIRC</a>
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
+      <li><a href="deconnexion">Déconnexion</a></li>
+  </ul>
+</div>
+</nav>
+<div class="container">
+  <div class="row">
+    <h2>Send broadcast</h2>
+    <form class="col s12" method="POST" id="login">
+      <div class="row">
+        <div class="input-field col s6">
+          <i class="material-icons prefix">chat_bubble</i>
+          <input id="m" type="text" class="validate" name="name">
+          <label for="m">Broadcast</label>
+      </div>
+      <div class="input-field col s6">
+          <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+            <i class="material-icons right">send</i>
+        </button>
+    </div>
+</div>
+</form>
+<form class="col s12" method="POST" action="/admin">
+      <div class="row">
+      <div class="input-field col s6">
+          <i class="material-icons prefix">chat_bubble</i>
+          <input id="oldchan" type="text" class="validate" name="oldchan">
+          <label for="oldchan">Ancien nom</label>
+      </div>
+        <div class="input-field col s44">
+          <i class="material-icons prefix">chat_bubble</i>
+          <input id="newchan" type="text" class="validate" name="newchan">
+          <label for="newchan">Nouveau nom</label>
+      </div>
+      <div class="input-field col s4">
+          <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+            <i class="material-icons right">send</i>
+        </button>
+    </div>
+</div>
+</form>
+</div>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script type="text/javascript">
+    var socket = io();
+    $('#login').submit(function(){
+        var msg = $('#m').val();
+        socket.emit('admin message', $('#m').val());
+        $('#m').val('');
+        return false;
+    });
+
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<head>
+  <title>Chat</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+  <nav>
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo">MyIRC</a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li><a href="account">Mon Compte</a></li>
+        <li><a href="deconnexion">Deconnexion</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="row">
+      <ul id="messages"></ul>
+      <form method="POST">
+        <input id="m" autocomplete="off" /><button>Send</button>
+      </form>
+    </div>
+  </div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  <script>
+    var commands = ["/nick", "/join", "/part", "/list", "/users", "/msg"];
+    var socket = io();
+    var bool = "false";
+    $('form').submit(function(){
+      var msg = $('#m').val();
+      if (msg.substring(0, 1) == "/") {
+
+        commands.forEach( function(element) {
+          if (element === msg.split(" ")[0]) {
+            console.log(msg.split(" ")[0]);
+            bool = true;
+          }
+        });
+      }
+      if (bool === false) {
+        socket.emit('chat message', nick + ": La commande n'existe pas");
+        $('#m').val('');
+        bool = "false";
+
+        return false;
+      }
+      else if(bool === "false") {
+        socket.emit('chat message', $('#m').val());
+        $('#m').val('');
+        bool = "false";
+        return false;
+      }
+      else if(bool === true) {
+        socket.emit(msg.split(" ")[0], msg);
+
+        bool = "false";
+        $('#m').val('');
+        return false;
+      }
+    });
+    socket.on('chat message', function(msg){
+      $('#messages').append($('<li>').text(msg));
+    });
+  </script>
+</body>
+</html>
